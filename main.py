@@ -8,10 +8,9 @@ serverPort = 63342  # Порт для доступа по сети
 
 class MyServer(BaseHTTPRequestHandler):
 
-    def do_GET(self):
-        """ Метод для обработки входящих GET-запросов """
-        query_components = parse_qs(urlparse(self.path).query)
-        page_content = '''<!doctype html>
+    def __get_html_content(self):
+        return '''
+        <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -137,6 +136,8 @@ class MyServer(BaseHTTPRequestHandler):
         .lh-tight {
             line-height: 1.25;
         }
+
+
 
 
     </style>
@@ -332,15 +333,18 @@ class MyServer(BaseHTTPRequestHandler):
                             FAQ
                         </h3>
                         <p class="d-inline-flex gap-1">
-                            <a class="btn btn-primary" style="width:380px" data-bs-toggle="collapse" href="#collapse1" role="button"
+                            <a class="btn btn-primary" style="width:380px" data-bs-toggle="collapse" href="#collapse1"
+                               role="button"
                                aria-expanded="false" aria-controls="collapseExample">
                                 Как купить?
                             </a>
-                            <a class="btn btn-primary" style="width:380px" data-bs-toggle="collapse" href="#collapse2" role="button"
+                            <a class="btn btn-primary" style="width:380px" data-bs-toggle="collapse" href="#collapse2"
+                               role="button"
                                aria-expanded="false" aria-controls="collapseExample">
                                 Как доставить?
                             </a>
-                            <a class="btn btn-primary" style="width:380px" data-bs-toggle="collapse" href="#collapse3" role="button"
+                            <a class="btn btn-primary" style="width:380px" data-bs-toggle="collapse" href="#collapse3"
+                               role="button"
                                aria-expanded="false" aria-controls="collapseExample">
                                 Какая гарантия?
                             </a>
@@ -361,13 +365,64 @@ class MyServer(BaseHTTPRequestHandler):
                             </div>
                         </div>
                     </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Номер</th>
+                            <th scope="col">Название товара</th>
+                            <th scope="col">Цена за штуку</th>
+                            <th scope="col">Количество</th>
+                            <th scope="col">Итоговая сумма</th>
+                            <th scope="col">Статус заказа</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <tr class="table-primary">
+                            <th scope="row">1</th>
+                            <td>Айфон 15</td>
+                            <td>10 000 р.</td>
+                            <td>5</td>
+                            <td>50 000 р.</td>
+                            <td>Новый</td>
+                        </tr>
+                        <tr>
+                            <tr class="table-warning">
+                            <th scope="row">2</th>
+                            <td>Айфон 16</td>
+                            <td>20 000 р.</td>
+                            <td>3</td>
+                            <td>60 000 р.</td>
+                            <td>Обработка</td>
+                        </tr>
+                        <tr>
+                            <tr class="table-success">
+                            <th scope="row">3</th>
+                            <td>Айфон 17</td>
+                            <td>50 000 р.</td>
+                            <td>2</td>
+                            <td>100 000 р.</td>
+                            <td>Обработан</td>
+                        </tr>
+                        <tr>
+                            <tr class="table-danger">
+                            <th scope="row">4</th>
+                            <td>Сяоми</td>
+                            <td>1 000 р.</td>
+                            <td>99</td>
+                            <td>99 000 р.</td>
+                            <td>Отменен</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </main>
 
     </div>
-
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
@@ -383,9 +438,15 @@ class MyServer(BaseHTTPRequestHandler):
     })()
 
 
+
+
 </script>
 </body>
-</html>'''
+</html>
+'''
+    def do_GET(self):
+        """ Метод для обработки входящих GET-запросов """
+        page_content = self.__get_html_content()
         self.send_response(200)  # Отправка кода ответа
         self.send_header("Content-type", "text/html")  # Отправка типа данных, который будет передаваться
         self.end_headers()  # Завершение формирования заголовков ответа
